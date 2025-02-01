@@ -1,0 +1,47 @@
+fullnameOverride: ""
+
+grist:
+  image: gristlabs/grist
+  tag: "1.3.3"
+  persistence:
+    enabled: false
+    size: 10Gi
+    storageClass: ""
+  env:
+    GRIST_POSTGRESQL_URL: "postgresql://grist:gristpassword@postgresql:5432/gristdb"
+    GRIST_REDIS_URL: "redis://:redispassword@redis:6379"
+    GRIST_MINIO_URL: "http://minio:9000"
+    GRIST_MINIO_ACCESS_KEY: "minio"
+    GRIST_MINIO_SECRET_KEY: "miniosecret"
+
+postgresql:
+  enabled: true
+  postgresqlUsername: grist
+  postgresqlPassword: gristpassword
+  postgresqlDatabase: gristdb
+
+redis:
+  enabled: true
+  password: redispassword
+  architecture: "standalone"
+
+minio:
+  enabled: true
+  accessKey: minio
+  secretKey: miniosecret
+
+ingress:
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: grist.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+    # - secretName: grist.local-tls
+    #   hosts:
+    #     - grist.local
+    

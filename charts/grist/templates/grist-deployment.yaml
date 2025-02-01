@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grist
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grist
+  template:
+    metadata:
+      labels:
+        app: grist
+    spec:
+      containers:
+        - name: grist
+          image: "{{ .Values.grist.image }}:{{ .Values.grist.tag }}"
+          env:
+            - name: GRIST_POSTGRESQL_URL
+              value: {{ .Values.grist.env.GRIST_POSTGRESQL_URL }}
+            - name: GRIST_REDIS_URL
+              value: {{ .Values.grist.env.GRIST_REDIS_URL }}
+            - name: GRIST_MINIO_URL
+              value: {{ .Values.grist.env.GRIST_MINIO_URL }}
+            - name: GRIST_MINIO_ACCESS_KEY
+              value: {{ .Values.grist.env.GRIST_MINIO_ACCESS_KEY }}
+            - name: GRIST_MINIO_SECRET_KEY
+              value: {{ .Values.grist.env.GRIST_MINIO_SECRET_KEY }}
+          ports:
+            - containerPort: 8484
+          {{- if .Values.grist.persistence.enabled }}
+          volumeMounts:
+            - name: grist-pvc
+              mountPath: /persist
+          {{- end }}
+      {{- if .Values.grist.persistence.enabled }}
+      volumes:
+        - name: grist-pvc
+          persistentVolumeClaim:
+            claimName: grist-pvcå
+      {{- end }}

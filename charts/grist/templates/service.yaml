@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "grist.fullname" . }}
+  labels:
+    {{- include "grist.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8484
+      targetPort: 8484
+      protocol: TCP
+      name: http
+  selector:
+    app: grist

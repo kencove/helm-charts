@@ -1,0 +1,17 @@
+{{- if .Values.grist.persistence.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grist-pvc
+  labels:
+    app: grist
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.grist.persistence.size }}
+  {{- if .Values.grist.persistence.storageClass }}
+  storageClassName: {{ .Values.grist.persistence.storageClass }}
+  {{- end }}
+{{- end }}
